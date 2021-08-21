@@ -10,13 +10,37 @@ For assistance:
    Reach out in your Slack community if you have questions
 */
 
-
+let numOfItems = 9;
 
 /*
 Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
 
+function showPage(list, page) {
+   const startIndex = ( page * numOfItems ) - numOfItems;
+   const endIndex = page * numOfItems;
+   const student_list = document.querySelector('.student-list');
+   student_list.innerHTML = '';
+
+   for (i = 0; i < list.length; i++) {
+      const student_info = `
+      <li class="student-item cf">
+         <div class="student-details">
+            <img class="avatar" src="${list[i].picture.large}" alt="Profile Picture">
+            <h3>${list[i].name.first} ${list[i].name.last}</h3>
+            <span class="email">${list[i].email}</span>
+         </div>
+         <div class="joined-details">
+            <span class="date">Joined ${list[i].registered.date}</span>
+          </div>
+       </li>
+      `;
+      if (i >= startIndex && i < endIndex) {
+         student_list.insertAdjacentHTML('beforeend', student_info);
+      }
+   }
+}
 
 
 /*
@@ -24,6 +48,35 @@ Create the `addPagination` function
 This function will create and insert/append the elements needed for the pagination buttons
 */
 
+function addPagination (list) {
+   const numOfPages = Math.ceil(list.length / numOfItems);
+   const link_list = document.querySelector('.link-list');
+   link_list.innerHTML = '';
+   for (i = 0; i < numOfPages; i++) {
+      const pageButton = `
+         <li>
+            <button type="button">${i + 1}</button>
+         </li>
+      `;
+      link_list.insertAdjacentHTML('beforeend', pageButton);
+   }
+   const firstButton = link_list.firstElementChild.firstElementChild;
+   firstButton.className = 'active';
 
+   link_list.addEventListener('click', (e) => {
+      if (e.target.type === 'button') {
+         const btns = document.querySelectorAll('button');
+         for (i = 0; i < btns.length; i++) {
+            btns[i].className = '';
+         }
+         e.target.className = 'active';
+         showPage(list, parseInt(e.target.innerText));
+      }
+   });
+}
 
 // Call functions
+showPage(data, 1);
+addPagination(data);
+
+//Code for Exceeds
