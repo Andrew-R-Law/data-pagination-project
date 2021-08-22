@@ -60,8 +60,11 @@ function addPagination (list) {
       `;
       link_list.insertAdjacentHTML('beforeend', pageButton);
    }
-   const firstButton = link_list.firstElementChild.firstElementChild;
-   firstButton.className = 'active';
+   
+   if (link_list.getElementsByTagName('li').length > 0) {
+      const firstButton = link_list.firstElementChild.firstElementChild;
+      firstButton.className = 'active';
+   }
 
    link_list.addEventListener('click', (e) => {
       if (e.target.type === 'button') {
@@ -80,3 +83,55 @@ showPage(data, 1);
 addPagination(data);
 
 //Code for Exceeds
+
+const searchBar = `
+   <label for="search" class="student-search">
+      <span>Search by name</span>
+      <input id="search" placeholder="Search by name...">
+      <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+   </label>`;
+document.querySelector('.header').insertAdjacentHTML('beforeend', searchBar);
+
+const search = document.querySelector('#search');
+const submit = document.querySelector('.student-search button');
+let studentMatches = [];
+
+function searchForStudents (searchInput, names) {
+   studentMatches = [];
+   for (i = 0; i < names.length; i++){
+      if (names[i].name.first.toLowerCase().includes(searchInput.value.toLowerCase()) || names[i].name.last.toLowerCase().includes(searchInput.value.toLowerCase()) ) {
+         studentMatches.push(names[i]);
+      }
+   }
+}
+
+submit.addEventListener('click', () => {
+   searchForStudents(search, data);
+   showPage(studentMatches, 1);
+   addPagination(studentMatches);
+   const header = document.querySelector('h2');
+   if (studentMatches.length === 0) {
+      header.innerText = 'No matches found.';
+   } else {
+      header.innerText = 'STUDENTS';
+   }
+});
+
+search.addEventListener('keyup', () => {
+   searchForStudents(search, data);
+   showPage(studentMatches, 1);
+   addPagination(studentMatches);
+   const header = document.querySelector('h2');
+   if (studentMatches.length === 0) {
+      header.innerText = 'No matches found.';
+   } else {
+      header.innerText = 'STUDENTS';
+   }
+});
+
+
+
+
+
+
+
